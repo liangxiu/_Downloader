@@ -9,12 +9,20 @@ user_list_suffix = '/playlists'
 list_url = root_url + 'playlist?list='
 
 def get_play_list(author):
-	response = requests.get(user_url + author + user_list_suffix)
+	try:
+		response = requests.get(user_url + author + user_list_suffix)
+	except Exception as e:
+		print("Error!!! %s" % e)
+		return []
 	soup = bs4.BeautifulSoup(response.text, 'html.parser')
 	return [a.attrs.get('href') for a in soup.select('div.yt-lockup-content a[href^="/playlist?"]')]
 
 def get_watch_list(list_suffix):
-	response = requests.get(root_url + list_suffix.replace("/",""))
+	try:
+		response = requests.get(root_url + list_suffix.replace("/",""))
+	except Exception as e:
+		print("Error!!! %s" % e)
+		return []
 	soup = bs4.BeautifulSoup(response.text, 'html.parser')
 	hrefs = soup.select('a[href^="/watch?"]')
 	print("count: %d" % len(hrefs))
@@ -27,7 +35,11 @@ def get_watch_list(list_suffix):
 
 def get_video_for_watch(watch_suffix):
 	url = root_url + watch_suffix
-	response = requests.get(url)
+	try:
+		response = requests.get(url)
+	except Exception as e:
+		print("Error!!! %s" % e)
+		return
 	html = response.text
 	count_s = re.findall(r'<meta itemprop="interactionCount" content="(\d+)">', html)
 	count = int(count_s[0])
