@@ -2,10 +2,10 @@ import os
 import fetch_video_info as parse 
 import sys
 import video_downloader as downer
-import fetch_author as fetcher
+import persists as fetcher
 
 while (True): 
-	author = fetcher.fetch()
+	author = fetcher.fetch_author()
 	if author == None:
 		sleep(60)
 		continue
@@ -36,4 +36,5 @@ while (True):
 			output = '%s/%d' % (dir_path, videoInfo[2])
 			downer.download_video(video_url, output)
 	
+	downer.re_download_fails()	
 	fetcher.record_author(author)
