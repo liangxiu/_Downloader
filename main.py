@@ -33,7 +33,7 @@ while (True):
 				continue
 			print("got videoInfo: %s" % videoInfo)
 			print("downloading video for watch: " + watch)
-			output = '%s/%d_%s_%s' % (dir_path, videoInfo[2], videoInfo[0], videoInfo[1])
+			output = '%s/%d' % (dir_path, videoInfo[2])
 			downer.download_video(video_url, output)
 	
 	fetcher.record_author(author)
