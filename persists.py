@@ -2,15 +2,21 @@ import operator
 
 def fetch_author():
 	author_file = open("author_input.txt")
-        authors = author_file.read().split('\n')
+	author_text = author_file.read()
+	author_text = author_text.replace('\r', '')
+        authors = author_text.split('\n')
 	author_file.close()
 	try:
 		done_authors = open("authors_output.txt", 'r')
-		authored = done_authors.read().split('\n')
+		file_text = done_authors.read()
+		file_text = file_text.replace('\r', '')
+		authored = file_text.split('\n')
 		done_authors.close()
 	except:
 		authored = []	
 	for author in authors:
+		if len(author) == 0:
+			continue
 		author_item = author.split(',')[0]
 		if author_item in authored:
 			continue
@@ -20,7 +26,7 @@ def fetch_author():
 
 def record_author(author):
 	file = open("author_output.txt", 'a')
-	file.write(author + '\n')
+	file.write(author + '\n\r')
 	file.close()
 
 
