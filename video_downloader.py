@@ -4,13 +4,13 @@ import persists
 import os
 
 def download_video(url, output, full_path=False):
+	if full_path	
+		output = output+'_%(upload_date)s.%(ext)s'	
 	def download_progress(d):
 		if d['status'] == 'error':
 			persists.record_fail_download(url, output)
 		elif d['status'] == 'finished':
 			persists.record_success_download(url)		
-	if not full_path:
-		output = output+'_%(upload_date)s.%(ext)s'	
 	ydl_opts = {
 		'outtmpl': output,
 		'progress_hooks': [download_progress]
@@ -34,6 +34,6 @@ def re_download_fails():
 		if fail == None:
 			break
 		fails = fail.split(',')
-		download_video(fails[0], fails[1])	
+		download_video(fails[0], fails[1], True)	
 
 
