@@ -4,7 +4,7 @@ import persists
 import os
 
 def download_video(url, output, full_path=False):
-	if full_path	
+	if full_path:	
 		output = output+'_%(upload_date)s.%(ext)s'	
 	def download_progress(d):
 		if d['status'] == 'error':
