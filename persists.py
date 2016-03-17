@@ -49,7 +49,10 @@ def record_success_download(url):
 			file.write(line + '\n')
 
 def fetch_fail_video():
-	file = open("fail_videos.txt")
+	try:
+		file = open("fail_videos.txt")
+	except:
+		return
 	urls = file.read().split('\n')
 	if len(urls) == 0:
 		reutrn
