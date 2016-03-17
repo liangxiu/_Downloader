@@ -33,8 +33,15 @@ while (True):
 				continue
 			print("got videoInfo: %s" % videoInfo)
 			print("downloading video for watch: " + watch)
-			output = '%s/%d' % (dir_path, videoInfo[2])
-			downer.download_video(video_url, output)
+			title = videoInfo[0]
+			before_item = downer.has_download_item(title, dir_path)
+			full_path = False
+			if before_item is None:
+				output = '%s/%d_%s' % (dir_path, videoInfo[2], videoInfo[0])
+			else:
+				output = dir_path + "/" +  before_item
+				full_path = True
+			downer.download_video(video_url, output, full_path)
 	
 	downer.re_download_fails()	
 	fetcher.record_author(author)
