@@ -7,7 +7,7 @@ def fetch_author():
         authors = author_text.split('\n')
 	author_file.close()
 	try:
-		done_authors = open("authors_output.txt", 'r')
+		done_authors = open("author_output.txt", 'r')
 		file_text = done_authors.read()
 		file_text = file_text.replace('\r', '')
 		authored = file_text.split('\n')

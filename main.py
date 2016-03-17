@@ -3,11 +3,12 @@ import fetch_video_info as parse
 import sys
 import video_downloader as downer
 import persists as fetcher
+import time
 
 while (True): 
 	author = fetcher.fetch_author()
 	if author == None:
-		sleep(60)
+		time.sleep(60)
 		continue
 
 	root_url = parse.root_url
