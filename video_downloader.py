@@ -34,7 +34,7 @@ def re_download_fails():
 		fail = persists.fetch_fail_video()
 		if fail == None:
 			break
-		fails = fail.split(',')
+		fails = fail.split(',,')
 		download_video(fails[0], fails[1], True)	
 
 
