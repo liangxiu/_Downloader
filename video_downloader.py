@@ -13,7 +13,7 @@ def download_video(url, output, full_path=False):
 		elif d['status'] == 'finished':
 			persists.record_success_download(url)		
 	ydl_opts = {
-		'outtmpl': output,
+		'outtmpl': new_out,
 		'progress_hooks': [download_progress]
 	}
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
