@@ -4,11 +4,12 @@ import persists
 import os
 
 def download_video(url, output, full_path=False):
+	new_out = output
 	if not full_path:	
-		output = output+'_%(upload_date)s.%(ext)s'	
+		new_out = new_out + '_%(upload_date)s.%(ext)s'	
 	def download_progress(d):
 		if d['status'] == 'error':
-			persists.record_fail_download(url, output)
+			persists.record_fail_download(url, new_out)
 		elif d['status'] == 'finished':
 			persists.record_success_download(url)		
 	ydl_opts = {
@@ -20,7 +21,7 @@ def download_video(url, output, full_path=False):
 			ydl.download([url])
 		except Exception as e:
 			print("Download error: %s" % e)
-			persists.record_fail_download(url, output)
+			persists.record_fail_download(url, new_out)
 
 def has_download_item(title, file_dir):
 	for item in os.listdir(file_dir):
