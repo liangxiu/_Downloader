@@ -4,10 +4,10 @@ import bs4
 import re
 import time
 
-root_url = 'https://www.youtube.com/'
-user_url = root_url + 'user/'
+root_url = 'https://www.youtube.com'
+user_url = root_url + '/user/'
 user_list_suffix = '/playlists'
-list_url = root_url + 'playlist?list='
+list_url = root_url + '/playlist?list='
 
 def get_play_list(author):
 	soup = bs4.BeautifulSoup(get_remote_response(user_url + author + user_list_suffix), 'html.parser')
@@ -25,7 +25,7 @@ def get_watch_list(list_suffix):
 	return watchs
 
 def get_video_for_watch(watch_suffix):
-	url = root_url + watch_suffix
+	url = root_url + '/' +  watch_suffix
 	html = get_remote_response(url)
 	count_s = re.findall(r'<meta itemprop="interactionCount" content="(\d+)">', html)
 	count = int(count_s[0])

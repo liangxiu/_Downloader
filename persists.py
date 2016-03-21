@@ -1,4 +1,7 @@
 import operator
+from collections import namedtuple
+
+Author = namedtuple('Author', 'author, channel')
 
 def fetch_author():
 	author_file = open("author_input.txt")
@@ -17,11 +20,14 @@ def fetch_author():
 	for author in authors:
 		if len(author) == 0:
 			continue
-		author_item = author.split(',')[0]
+		author_attr = author.split(',')
+		author_item = author_attr[0]
 		if author_item in authored:
 			continue
 		else:
-			return author_item
+			if len(author_attr) > 1:
+				return Author(author_attr[0], author_attr[1])
+			return Author(author_attr[0], None)
 
 
 def record_author(author):
