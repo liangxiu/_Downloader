@@ -32,7 +32,7 @@ def fetch_author():
 
 def record_author(author):
 	file = open("author_output.txt", 'a')
-	file.write(author + '\n\r')
+	file.write(author.author + '\n\r')
 	file.close()
 
 
