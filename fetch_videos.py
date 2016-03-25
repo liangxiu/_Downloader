@@ -29,7 +29,10 @@ def find_load_more_url(page):
 
 def download_page(url):
     print("Downloading {0}".format(url))
-    return requests.get(url).text
+    try:
+        return requests.get(url).text
+    except Exception as e:
+	print("Error!!! downloading url:%s with exception: %s" % (url, e))
 
 def get_videos(username):
     if username.channel != None:
@@ -41,11 +44,14 @@ def get_videos(username):
     page_url = find_load_more_url(page)
     while page_url:
 	print("getting more page")
-        json_data = json.loads(download_page(page_url))
+	page_response = download_page(page_url)
+	if page_response == None:
+		print("Download fail, sleep then continue")
+		time.sleep(4)
+        json_data = json.loads(page_response)
         page = bs4.BeautifulSoup(json_data.get("content_html", ""), "html.parser")
         videos.extend(parse_videos_page(page))
         page_url = find_load_more_url(bs4.BeautifulSoup(json_data.get("load_more_widget_html", ""), 'html.parser'))
-	print("done this time, sleep 6 seconds")
 	time.sleep(1)
     return videos
 
