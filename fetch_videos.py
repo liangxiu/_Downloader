@@ -48,6 +48,7 @@ def get_videos(username):
 	if page_response == None:
 		print("Download fail, sleep then continue")
 		time.sleep(4)
+		continue
         json_data = json.loads(page_response)
         page = bs4.BeautifulSoup(json_data.get("content_html", ""), "html.parser")
         videos.extend(parse_videos_page(page))
