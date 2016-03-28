@@ -24,10 +24,13 @@ def download_video(url, output, full_path=False):
 			persists.record_fail_download(url, new_out)
 
 def has_download_item(title, file_dir):
-	for item in os.listdir(file_dir):
-		if item.find(title) >= 0:
-			newitem = item.replace('.part', '')	
-			return newitem
+	try:
+		for item in os.listdir(file_dir):
+			if item.find(title) >= 0:
+				newitem = item.replace('.part', '')	
+				return newitem
+	except:
+		return None
 
 def re_download_fails():
 	while(True):
