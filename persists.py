@@ -39,6 +39,7 @@ def record_author(author):
 def record_fail_download(url, output):
 	file = open("fail_videos.txt", 'a')
 	file.write(url + ',,' + output + '\n')
+	print("failed for dest: " + output)
 	file.close()
 
 def record_success_download(url):

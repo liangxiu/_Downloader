@@ -3,10 +3,10 @@ import youtube_dl
 import persists
 import os
 
-def download_video(url, output, full_path=False):
+def download_video(url, output, title, full_path=False):
 	new_out = output
 	if not full_path:	
-		new_out = new_out + '_%(upload_date)s.%(ext)s'	
+		new_out = new_out + '/%(upload_date)s_' + title + '.%(ext)s'	
 	def download_progress(d):
 		if d['status'] == 'error':
 			persists.record_fail_download(url, new_out)
@@ -27,8 +27,8 @@ def has_download_item(title, file_dir):
 	try:
 		for item in os.listdir(file_dir):
 			if item.find(title) >= 0:
-				newitem = item.replace('.part', '')	
-				return newitem
+				#newitem = item.replace('.part', '')	
+				return item
 	except:
 		return None
 
@@ -38,6 +38,7 @@ def re_download_fails():
 		if fail == None:
 			break
 		fails = fail.split(',,')
+		print(fail)
 		download_video(fails[0], fails[1], True)	
 
 

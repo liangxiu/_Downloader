@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import os
 import fetch_video_info as parse 
 import sys
@@ -7,9 +8,13 @@ import time
 import fetch_videos as fetcher2
 
 while (True): 
+	print("check fails")
+	downer.re_download_fails()
+	print("fails redownload done")
+	
 	author = fetcher.fetch_author()
 	if author == None:
-		time.sleep(60)
+		time.sleep(10)
 		continue
 
 	root_url = parse.root_url
@@ -34,36 +39,12 @@ while (True):
 		before_item = downer.has_download_item(video.title, dir_path)
                 full_path = False
                 if before_item is None:
-                	output = '%s/%s' % (dir_path, video.title)
+                	output = dir_path
                 else:
-			if not before_item.endswith('.part'):
+			print("has before download item: %s" % before_item)
+			if before_item.endswith('.mp4'):
 				continue
-                	output = dir_path + "/" +  before_item
+                	output = dir_path + "/" +  before_item.replace('.part', '')
                         full_path = True
-                downer.download_video(video_url, output, full_path)
-
-		
-#	for item in play_lists:
-#		print("getting watch list for play list: " + item)
-#		watchs = parse.get_watch_list(item)
-#		print("got watch lists for %s with len: %d" % (item, len(watchs)))
-#		for watch in watchs:
-#			video_url = root_url + '/' + watch
-#			print("getting video info for watch " + watch)
-#			videoInfo = parse.get_video_for_watch(watch)
-#			if videoInfo is None:
-#				continue
-#			print("got videoInfo: %s" % videoInfo)
-#			print("downloading video for watch: " + watch)
-#			title = videoInfo[0]
-#			before_item = downer.has_download_item(title, dir_path)
-#			full_path = False
-#			if before_item is None:
-#				output = '%s/%d_%s' % (dir_path, videoInfo[2], videoInfo[0])
-#			else:
-#				output = dir_path + "/" +  before_item
-#				full_path = True
-#			downer.download_video(video_url, output, full_path)
-#	
-	downer.re_download_fails()	
+                downer.download_video(video_url, output, video.title, full_path)	
 	fetcher.record_author(author)
