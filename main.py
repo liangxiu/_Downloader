@@ -8,9 +8,9 @@ import time
 import fetch_videos as fetcher2
 
 while (True): 
-	print("check fails")
+	print("check fail videos")
 	downer.re_download_fails()
-	print("fails redownload done")
+	print("fail videos redownload done")
 	
 	author = fetcher.fetch_author()
 	if author == None:

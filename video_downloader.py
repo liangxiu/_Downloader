@@ -39,6 +39,6 @@ def re_download_fails():
 			break
 		fails = fail.split(',,')
 		print(fail)
-		download_video(fails[0], fails[1], True)	
+		download_video(fails[0], fails[1], None, True)	
 
 
