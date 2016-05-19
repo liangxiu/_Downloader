@@ -1,2 +1,3 @@
-itsJudysLife
-FunForLouis
+#itsJudysLife, channel:, time_limit:
+FunForLouis, time_limit:1 month
+#vimeo:buildporn, time_limit:1 week

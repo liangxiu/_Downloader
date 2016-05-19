@@ -18,7 +18,8 @@ def parse_video_div(div):
 	p_tag = div.find("p", 'meta')
 	author = p_tag.find('a').text
 	span_tag = p_tag.find("span", "icon")
-	click_count = None
+	time_string = p_tag.find('time').text
+	click_count = ''
 	if span_tag is not None:
 		click_count = span_tag.text.strip()
     #duration = div.find("span", "video-time").contents[0].text
@@ -26,7 +27,7 @@ def parse_video_div(div):
     #img = div.find("img")
     #thumbnail = "http:" + img.get("src", "") if img else ""
     #return Video(video_id, title, duration, views, thumbnail)
-	return p.Video(video_id, title, author, click_count)
+	return p.Video(video_id, title, author, click_count, time_string)
 
 def parse_videos_page(page):
     video_divs = page.find_all("li", "clearfix")
@@ -79,7 +80,7 @@ def dir_path(author):
         root = os.getcwd()
         dir_path = root + '/' + author.replace("vimeo:", '')
         if not os.path.isdir(dir_path):
-                os.mkdirs(dir_path)
+                os.mkdir(dir_path)
         return dir_path	
 
 if __name__ == "__main__":

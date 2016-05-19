@@ -7,6 +7,7 @@ import persists as p
 import time
 import fetch_videos as fetcher_youtube
 import fetch_videos_vimeo as fetcher_vimeo
+import tr_time
 
 while (True): 
 	print("check fail videos")
@@ -39,7 +40,12 @@ while (True):
 		print("has before item: %s" % before_item)
 		if before_item is not None and not before_item.endswith('.part'):
 			continue
+	        if author.time_limit is not None:
+			print("check time condition: %s" % video.time_string)
+			if not tr_time.time_meet(video.time_string, author.time_limit):
+				print('No download, time not meet for ' + video.time_string)
+				continue	
 		video_url = fetcher.video_url(video.video_id)
 		full_path = fetcher.video_dest(author.author, video)
                 downer.download_video(video_url, full_path)	
-	fetcher.record_author(author)
+	p.record_author(author)

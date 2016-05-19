@@ -2,9 +2,10 @@ import operator
 import codecs
 from collections import namedtuple
 
-Author = namedtuple('Author', 'author, channel')
-Video = namedtuple("Video", "video_id title source click_count")
-Video.__new__.__defaults__ = (None,)*len(Video._fields)
+Author = namedtuple('Author', 'author, channel, time_limit')
+Video = namedtuple("Video", "video_id title source click_count time_string")
+Video.__new__.__defaults__ = ('',)*len(Video._fields)
+Author.__new__.__defaults__ = (None,)*len(Author._fields)
 
 def fetch_author():
 	author_file = open("author_input.txt")
@@ -21,17 +22,29 @@ def fetch_author():
 	except:
 		authored = []	
 	for author in authors:
-		if len(author) == 0:
+		if len(author) == 0 or author.startswith('#'):
 			continue
 		author_attr = author.split(',')
 		author_item = author_attr[0]
 		if author_item in authored:
 			continue
 		else:
-			if len(author_attr) > 1:
-				return Author(author_attr[0], author_attr[1])
-			return Author(author_attr[0], None)
-
+			arr = author_attr
+			if len(arr) ==  1:
+				return Author(arr[0])
+			else:
+				def getfeature(feature):
+					for item in arr:
+						if item.strip().startswith(feature):
+							return item.replace(feature, '')		
+				channel = getfeature('channel:')
+				time_limit = getfeature('time_limit:')
+				if channel is not None:
+					channel = channel.strip()
+				if time_limit is not None:
+					time_limit = time_limit.strip()
+				print("author arr: %s" % arr)
+				return Author(arr[0], channel, time_limit)
 
 def record_author(author):
 	file = open("author_output.txt", 'a')
@@ -91,6 +104,8 @@ def store_videos_to_file(videos, author):
 			write_line += '##' + video.source
 		if video.click_count != None:
 			write_line += '##' + video.click_count
+		if video.time_string != None:
+			write_line += '##' + video.time_string
 		file_out.write(write_line + '\n')
 	file_out.close()
 
@@ -108,6 +123,8 @@ def cached_videos_for_author(author):
 				video = Video(arr[0], arr[1], arr[2])
 			elif len(arr) == 4:
 				video = Video(arr[0], arr[1], arr[2], arr[3])
+			elif len(arr) == 5:
+				video = Video(arr[0], arr[1], arr[2], arr[3], arr[4])
 			if video is not None:
 				videos.append(video)
 		return videos

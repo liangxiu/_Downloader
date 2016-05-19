@@ -12,12 +12,15 @@ root_url = "https://www.youtube.com"
 def parse_video_div(div):
 	video_id = div.get("data-context-item-id", "")
     	title = div.find("a", "yt-uix-tile-link").text
+	first_li_tag = div.find("ul", 'yt-lockup-meta-info').find('li')
+	click_count = first_li_tag.text.replace('views', '').strip()
+	time_string = first_li_tag.find_next_sibling('li').text.strip()
     #duration = div.find("span", "video-time").contents[0].text
     #views = int(div.find("ul", "yt-lockup-meta-info").contents[0].text.rstrip(" views").replace(",", ""))
     #img = div.find("img")
     #thumbnail = "http:" + img.get("src", "") if img else ""
     #return Video(video_id, title, duration, views, thumbnail)
-	return p.Video(video_id, title)
+	return p.Video(video_id, title, '', click_count, time_string)
 
 def parse_videos_page(page):
     video_divs = page.find_all("div", "yt-lockup-video")
@@ -59,7 +62,6 @@ def get_videos(username):
         videos.extend(parse_videos_page(page))
         page_url = find_load_more_url(bs4.BeautifulSoup(json_data.get("load_more_widget_html", ""), 'html.parser'))
 	time.sleep(1)
-	break
     p.store_videos_to_file(videos, username.author)
     return videos
 
@@ -74,7 +76,7 @@ def dir_path(author):
         root = os.getcwd()
         dir_path = root + '/' + author
         if not os.path.isdir(dir_path):
-                os.mkdirs(dir_path)
+                os.mkdir(dir_path)
         return dir_path	
 
 if __name__ == "__main__":
