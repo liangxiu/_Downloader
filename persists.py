@@ -1,7 +1,9 @@
 import operator
+import codecs
 from collections import namedtuple
 
 Author = namedtuple('Author', 'author, channel')
+Video = namedtuple("Video", "video_id title")
 
 def fetch_author():
 	author_file = open("author_input.txt")
@@ -77,6 +79,27 @@ def fetch_fail_video():
 			return
 		sorted_dict = sorted(new_dict.items(), key = operator.itemgetter(1))
 		return sorted_dict[0][0]
+
+def store_videos_to_file(videos, author):
+	if len(videos) == 0:
+		return
+	file_out = codecs.open(author+"_videos.txt", 'w', 'utf-8')
+	for video in videos:
+		file_out.write(video.video_id  + "##" + video.title + "\n")
+	file_out.close()
+
+def cached_videos_for_author(author):
+	try:
+		file_in = open(author + '_videos.txt', 'r')
+		videos = []
+		for line in file_in.readlines():
+			line = line.replace('\n', '')
+			arr = line.split('##')
+			videos.append(Video(arr[0], arr[1]))
+		return videos
+	except Exception as e:
+		print("error: %s" % e)
+		return	
 
 def test():
 	item = fetch()

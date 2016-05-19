@@ -3,12 +3,12 @@ import requests
 import time
 import json
 import persists as p
-import fetch_video_info as ref
 from collections import namedtuple
 import codecs
+import os
 
-Video = namedtuple("Video", "video_id title")
-root_url = ref.root_url
+root_url = "https://www.youtube.com"
+
 def parse_video_div(div):
 	video_id = div.get("data-context-item-id", "")
     	title = div.find("a", "yt-uix-tile-link").text
@@ -17,7 +17,7 @@ def parse_video_div(div):
     #img = div.find("img")
     #thumbnail = "http:" + img.get("src", "") if img else ""
     #return Video(video_id, title, duration, views, thumbnail)
-	return Video(video_id, title)
+	return p.Video(video_id, title)
 
 def parse_videos_page(page):
     video_divs = page.find_all("div", "yt-lockup-video")
@@ -30,14 +30,13 @@ def find_load_more_url(page):
             return root_url + url
 
 def download_page(url):
-    print("Downloading {0}".format(url))
     try:
         return requests.get(url).text
     except Exception as e:
 	print("Error!!! downloading url:%s with exception: %s" % (url, e))
 
 def get_videos(username):
-    cached_videos = cached_videos_for_author(username.author)
+    cached_videos = p.cached_videos_for_author(username.author)
     if cached_videos != None:
 	print("has cached videos")
 	return cached_videos
@@ -60,28 +59,23 @@ def get_videos(username):
         videos.extend(parse_videos_page(page))
         page_url = find_load_more_url(bs4.BeautifulSoup(json_data.get("load_more_widget_html", ""), 'html.parser'))
 	time.sleep(1)
-    store_videos_to_file(videos, username.author)
+	break
+    p.store_videos_to_file(videos, username.author)
     return videos
 
-def store_videos_to_file(videos, author):
-	if len(videos) == 0:
-		return
-	file_out = codecs.open(author+"_videos.txt", 'w', 'utf-8')
-	for video in videos:
-		file_out.write(video.video_id  + "##" + video.title + "\n")
-	file_out.close()
+def video_url(video_id):
+        return root_url + '/watch?v=' + video_id
 
-def cached_videos_for_author(author):
-	try:
-		file_in = open(author + '_videos.txt', 'r')
-		videos = []
-		for line in file_in.readlines():
-			line = line.replace('\n', '')
-			arr = line.split('##')
-			videos.append(Video(arr[0], arr[1]))
-		return videos
-	except Exception as e:
-		return	
+def video_dest(author, title):
+	full_path = dir_path(author) + '/%(upload_date)s_' + title.decode('utf-8') + '.%(ext)s'
+	return full_path
+
+def dir_path(author):
+        root = os.getcwd()
+        dir_path = root + '/' + author
+        if not os.path.isdir(dir_path):
+                os.mkdirs(dir_path)
+        return dir_path	
 
 if __name__ == "__main__":
 	videos = get_videos(p.Author('FunForLouis', None))
