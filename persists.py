@@ -3,7 +3,8 @@ import codecs
 from collections import namedtuple
 
 Author = namedtuple('Author', 'author, channel')
-Video = namedtuple("Video", "video_id title")
+Video = namedtuple("Video", "video_id title source click_count")
+Video.__new__.__defaults__ = (None,)*len(Video._fields)
 
 def fetch_author():
 	author_file = open("author_input.txt")
@@ -85,7 +86,12 @@ def store_videos_to_file(videos, author):
 		return
 	file_out = codecs.open(author+"_videos.txt", 'w', 'utf-8')
 	for video in videos:
-		file_out.write(video.video_id  + "##" + video.title + "\n")
+		write_line = video.video_id  + "##" + video.title
+		if video.source != None:
+			write_line += '##' + video.source
+		if video.click_count != None:
+			write_line += '##' + video.click_count
+		file_out.write(write_line + '\n')
 	file_out.close()
 
 def cached_videos_for_author(author):
@@ -95,7 +101,15 @@ def cached_videos_for_author(author):
 		for line in file_in.readlines():
 			line = line.replace('\n', '')
 			arr = line.split('##')
-			videos.append(Video(arr[0], arr[1]))
+			video = None
+			if len(arr) == 2:
+				video = Video(arr[0], arr[1])
+			elif len(arr) == 3:
+				video = Video(arr[0], arr[1], arr[2])
+			elif len(arr) == 4:
+				video = Video(arr[0], arr[1], arr[2], arr[3])
+			if video is not None:
+				videos.append(video)
 		return videos
 	except Exception as e:
 		print("error: %s" % e)

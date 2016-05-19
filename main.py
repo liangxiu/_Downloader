@@ -40,6 +40,6 @@ while (True):
 		if before_item is not None and not before_item.endswith('.part'):
 			continue
 		video_url = fetcher.video_url(video.video_id)
-		full_path = fetcher.video_dest(author.author, video.title)
+		full_path = fetcher.video_dest(author.author, video)
                 downer.download_video(video_url, full_path)	
 	fetcher.record_author(author)

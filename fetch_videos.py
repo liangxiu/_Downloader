@@ -66,8 +66,8 @@ def get_videos(username):
 def video_url(video_id):
         return root_url + '/watch?v=' + video_id
 
-def video_dest(author, title):
-	full_path = dir_path(author) + '/%(upload_date)s_' + title.decode('utf-8') + '.%(ext)s'
+def video_dest(author, video):
+	full_path = dir_path(author) + '/%(upload_date)s_' + video.title.decode('utf-8') + '.%(ext)s'
 	return full_path
 
 def dir_path(author):

@@ -15,12 +15,18 @@ def parse_video_div(div):
 	video_url = div.find("a").get("href")
 	video_id = video_url.split("/")[-1]
     	title = div.find("p", 'title').find('a').text
+	p_tag = div.find("p", 'meta')
+	author = p_tag.find('a').text
+	span_tag = p_tag.find("span", "icon")
+	click_count = None
+	if span_tag is not None:
+		click_count = span_tag.text.strip()
     #duration = div.find("span", "video-time").contents[0].text
     #views = int(div.find("ul", "yt-lockup-meta-info").contents[0].text.rstrip(" views").replace(",", ""))
     #img = div.find("img")
     #thumbnail = "http:" + img.get("src", "") if img else ""
     #return Video(video_id, title, duration, views, thumbnail)
-	return p.Video(video_id, title)
+	return p.Video(video_id, title, author, click_count)
 
 def parse_videos_page(page):
     video_divs = page.find_all("li", "clearfix")
@@ -45,7 +51,12 @@ def get_videos(channel):
     videos = []
     while True:
         page_url = page_url_tp % (channel, i)
-        page = bs4.BeautifulSoup(download_page(page_url), "html.parser")
+	page_text = download_page(page_url)
+	if page_text == None:
+		print("sleep 5 seconds and continue the page")
+		time.sleep(5)
+		continue
+        page = bs4.BeautifulSoup(page_text, "html.parser")
         sub_videos = parse_videos_page(page)
         if sub_videos == None:
             break
@@ -58,9 +69,11 @@ def get_videos(channel):
 def video_url(video_id):
 	return root_url + '/' +  video_id
 
-def video_dest(author, title):
-        full_path = dir_path(author) + '/' + '%(upload_date)s_' + title.decode('utf-8') + '.%(ext)s'
-        return full_path
+def video_dest(author, video):
+	full_path = dir_path(author) + '/' + '%(upload_date)s_' + video.title.decode('utf-8') + '_' + video.source.decode('utf-8')
+	if video.click_count != None:
+		full_path += '_' + video.click_count 
+        return full_path + '.%(ext)s'
 
 def dir_path(author):
         root = os.getcwd()
