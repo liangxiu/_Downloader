@@ -1,5 +1,6 @@
 import operator
 import codecs
+import os
 from collections import namedtuple
 
 Author = namedtuple('Author', 'author, channel, time_limit')
@@ -59,6 +60,11 @@ def record_fail_download(url, output):
 	file.close()
 
 def record_success_download(url):
+	#update success_videos.txt
+	file = open('success_videos.txt', 'a')
+	file.write(url + '\n');
+	file.close()
+	#update fail_videos.txt
 	file = open("fail_videos.txt")
 	urls = file.read().split('\n')
 	file.close()
@@ -93,6 +99,14 @@ def fetch_fail_video():
 			return
 		sorted_dict = sorted(new_dict.items(), key = operator.itemgetter(1))
 		return sorted_dict[0][0]
+
+def fetch_success_videos():
+	if not os.path.isfile('success_videos.txt'):
+		return
+	file = open('success_videos.txt')
+	urls = file.read().split('\n')
+	file.close()
+	return urls
 
 def store_videos_to_file(videos, author):
 	if len(videos) == 0:

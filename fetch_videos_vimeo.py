@@ -14,9 +14,9 @@ root_url = "https://vimeo.com"
 def parse_video_div(div):
 	video_url = div.find("a").get("href")
 	video_id = video_url.split("/")[-1]
-    	title = div.find("p", 'title').find('a').text
+    	title = div.find("p", 'title').find('a').text.decode('utf-8')
 	p_tag = div.find("p", 'meta')
-	author = p_tag.find('a').text
+	author = p_tag.find('a').text.decode('utf-8')
 	span_tag = p_tag.find("span", "icon")
 	time_string = p_tag.find('time').text
 	click_count = ''
@@ -71,7 +71,7 @@ def video_url(video_id):
 	return root_url + '/' +  video_id
 
 def video_dest(author, video):
-	full_path = dir_path(author) + '/' + '%(upload_date)s_' + video.title.decode('utf-8') + '_' + video.source.decode('utf-8')
+	full_path = dir_path(author) + '/' + '%(upload_date)s_' + video.title.replace('/','') + '_' + video.source
 	if video.click_count != None:
 		full_path += '_' + video.click_count 
         return full_path + '.%(ext)s'

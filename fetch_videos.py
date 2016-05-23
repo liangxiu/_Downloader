@@ -11,7 +11,7 @@ root_url = "https://www.youtube.com"
 
 def parse_video_div(div):
 	video_id = div.get("data-context-item-id", "")
-    	title = div.find("a", "yt-uix-tile-link").text
+    	title = div.find("a", "yt-uix-tile-link").text.decode('utf-8')
 	first_li_tag = div.find("ul", 'yt-lockup-meta-info').find('li')
 	click_count = first_li_tag.text.replace('views', '').strip()
 	time_string = first_li_tag.find_next_sibling('li').text.strip()
@@ -69,7 +69,7 @@ def video_url(video_id):
         return root_url + '/watch?v=' + video_id
 
 def video_dest(author, video):
-	full_path = dir_path(author) + '/%(upload_date)s_' + video.title.decode('utf-8') + '.%(ext)s'
+	full_path = dir_path(author) + '/%(upload_date)s_' + video.title.replace('/','') + '.%(ext)s'
 	return full_path
 
 def dir_path(author):

@@ -11,6 +11,7 @@ def download_video(url, dest):
 			persists.record_success_download(url)		
 	ydl_opts = {
 		'outtmpl': dest,
+		'max-filesize': '500m',
 		'progress_hooks': [download_progress]
 	}
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
