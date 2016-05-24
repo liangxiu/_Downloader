@@ -125,7 +125,7 @@ def store_videos_to_file(videos, author):
 
 def cached_videos_for_author(author):
 	try:
-		file_in = open(author + '_videos.txt', 'r')
+		file_in = codecs.open(author + '_videos.txt', 'r', 'utf-8')
 		videos = []
 		for line in file_in.readlines():
 			line = line.replace('\n', '')
@@ -161,4 +161,7 @@ def test2():
 	print(fail)
 	record_success_download('cccc')
 	print(fetch_fail_video())
+
+if __name__ == '__main__':
+	print(fetch_success_videos())
 #test2()
