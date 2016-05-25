@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
+import sys
+import os
+sys.path.insert(0, os.path.abspath('./youtube-dl'))
 import youtube_dl
 import persists
-import os
 
 def download_video(url, dest):
 	def download_progress(d):
