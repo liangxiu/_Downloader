@@ -11,7 +11,7 @@ root_url = "https://www.youtube.com"
 
 def parse_video_div(div):
 	video_id = div.get("data-context-item-id", "")
-    	title = div.find("a", "yt-uix-tile-link").text.decode('utf-8')
+    	title = div.find("a", "yt-uix-tile-link").text
 	first_li_tag = div.find("ul", 'yt-lockup-meta-info').find('li')
 	click_count = first_li_tag.text.replace('views', '').strip()
 	time_string = first_li_tag.find_next_sibling('li').text.strip()
