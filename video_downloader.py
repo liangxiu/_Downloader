@@ -13,7 +13,7 @@ def download_video(url, dest):
 			persists.record_success_download(url)		
 	ydl_opts = {
 		'outtmpl': dest,
-		'max-filesize': '500m',
+		'format': 'bestvideo[height<=720]+bestaudio/best[height<=720]',
 		'progress_hooks': [download_progress]
 	}
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -42,4 +42,4 @@ def re_download_fails():
 		download_video(fails[0], fails[1])	
 
 if __name__ == '__main__':
-	download_video('https://vimeo.com/159120552', './vimeo_test.mp4', None, True)
+	download_video('https://vimeo.com/163906449', './test_dir/vimeo_test.mp4')
