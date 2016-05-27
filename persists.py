@@ -54,7 +54,7 @@ def record_author(author):
 
 
 def record_fail_download(url, output):
-	file = open("fail_videos.txt", 'a')
+	file = codecs.open("fail_videos.txt", 'a', 'utf-8')
 	file.write(url + ',,' + output + '\n')
 	print("failed for dest: " + output)
 	file.close()
@@ -79,7 +79,7 @@ def record_success_download(url):
 
 def fetch_fail_video():
 	try:
-		file = open("fail_videos.txt")
+		file = codecs.open("fail_videos.txt", 'r', 'utf-8')
 	except:
 		return
 	urls = file.read().split('\n')
